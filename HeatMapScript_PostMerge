@@ -1,3 +1,8 @@
+import arcpy
+from arcpy import os
+from csv import reader
+import numpy as np
+import re
 
 Merge = "Geocoded_Merge"
 #populate new field with string values of procurement radius
