@@ -70,7 +70,7 @@ for i in range(e):
 
 for i in range(e):
         with arcpy.EnvManager(outputCoordinateSystem='GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",SPHEROID["WGS_1984",6378137.0,298.257223563]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]]'):
-            arcpy.conversion.PolygonToRaster(filepath_current+"\\T"+FinalArray[i,0]+"_Clip", "TOT_MCF", filepath + '\\Raster_T'+FinalArray[i,0], "CELL_CENTER", "NONE", 0.004, "DO_NOT_BUILD")
+            arcpy.conversion.PolygonToRaster(filepath_current+"\\T"+FinalArray[i,0]+"_Clip", "TOT_MCF", filepath_current+'\\Raster_T'+FinalArray[i,0], "CELL_CENTER", "NONE", 0.004, "DO_NOT_BUILD")
 
 #Create string containing names of all rasters to be used in MosaictoNewRaster, store as MosaicString
 MosaicString = ""
