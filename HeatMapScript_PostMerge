@@ -57,6 +57,9 @@ for i in f:
 
 FinalArray = np.array(Final)
 
+filepath_current = 
+filepath_traveltimes = 
+
 # Traditional Clip
 for i in range(e):
         arcpy.analysis.Clip(filepath+"\\T"+FinalArray[i,0]+"0", filepath+"\\T"+FinalArray[i,0], filepath + '\\T' + FinalArray[i,0] + "_Clip" , None)
