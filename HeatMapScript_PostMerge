@@ -4,6 +4,9 @@ from csv import reader
 import numpy as np
 import re
 
+filepath_current = input("File Path: ")
+filepath_traveltimes = "C:\Users\ikenn\OneDrive - University of Massachusetts\Documents - FFRC_TPO\Ian's TPO Docs\MLHeatMap\TravelTimeAreas\TravelTimeAreas.gdb"
+
 Merge = "Geocoded_Merge"
 #populate new field with string values of procurement radius
 arcpy.management.CalculateField(Merge, "Pro_Rad_Final", 'str(!Pro_Rad!) + " MILES"', "PYTHON3", '', "TEXT", "NO_ENFORCE_DOMAINS")
@@ -56,9 +59,6 @@ for i in f:
     next
 
 FinalArray = np.array(Final)
-
-filepath_current = input("File Path: ")
-filepath_traveltimes = "C:\Users\ikenn\OneDrive - University of Massachusetts\Documents - FFRC_TPO\Ian's TPO Docs\MLHeatMap\TravelTimeAreas\TravelTimeAreas.gdb"
 
 # Traditional Clip
 for i in range(e):
