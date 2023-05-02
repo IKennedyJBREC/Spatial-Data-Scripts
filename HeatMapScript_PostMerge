@@ -57,12 +57,12 @@ for i in f:
 
 FinalArray = np.array(Final)
 
-filepath_current = 
-filepath_traveltimes = 
+filepath_current = input("File Path: ")
+filepath_traveltimes = "C:\Users\ikenn\OneDrive - University of Massachusetts\Documents - FFRC_TPO\Ian's TPO Docs\MLHeatMap\TravelTimeAreas\TravelTimeAreas.gdb"
 
 # Traditional Clip
 for i in range(e):
-        arcpy.analysis.Clip(filepath+"\\T"+FinalArray[i,0]+"0", filepath+"\\T"+FinalArray[i,0], filepath + '\\T' + FinalArray[i,0] + "_Clip" , None)
+        arcpy.analysis.Clip(filepath_current+"\\T"+FinalArray[i,0], filepath_traveltimes+"\\T"+FinalArray[i,0], filepath_current+'\\T'+FinalArray[i,0]+"_Clip" , None)
 # Or Pairwise Clip:
 # filepath2 = r"C:\Users\ikenn\Documents\TravelTimeLayout\TravelTimeLayout.gdb"
 # r"C:\Users\ikenn\OneDrive - University of Massachusetts\Documents\MyProject2\MyProject2.gdb"
@@ -72,7 +72,7 @@ for i in range(e):
 
 for i in range(e):
         with arcpy.EnvManager(outputCoordinateSystem='GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",SPHEROID["WGS_1984",6378137.0,298.257223563]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]]'):
-            arcpy.conversion.PolygonToRaster(filepath+"\\T"+FinalArray[i,0]+"_Clip", "TOT_MCF", filepath + '\\Raster_T'+FinalArray[i,0], "CELL_CENTER", "NONE", 0.004, "DO_NOT_BUILD")
+            arcpy.conversion.PolygonToRaster(filepath_current+"\\T"+FinalArray[i,0]+"_Clip", "TOT_MCF", filepath + '\\Raster_T'+FinalArray[i,0], "CELL_CENTER", "NONE", 0.004, "DO_NOT_BUILD")
 
 #Create string containing names of all rasters to be used in MosaictoNewRaster, store as MosaicString
 MosaicString = ""
