@@ -1,0 +1,130 @@
+---
+title: "NBA Advanced Metrics Analysis"
+description: "Early findings from an Advanced Metrics Analysis"
+author: "Ian Kennedy"
+date: "`r Sys.Date()`"
+output: 
+  distill::distill_article:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    pandoc_args: "--number-sections"
+    code_folding: true
+---
+
+<style>
+html {
+  scroll-behavior: smooth;
+}
+#TOC {
+  position: relative;
+  z-index: 50;
+  background: #ebebeb;     
+  padding: 10px;           
+  border-radius: 5px;    
+  }
+@media screen and (max-width: 900px) {
+#TOC {
+    position: relative;
+  }
+}
+</style>
+
+<style type="text/css">
+.main-container {
+  max-width: 100% !important;
+  margin: auto;
+}
+</style>
+
+
+```{r Setup, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE,  
+                      layout="l-body-outset",
+                      fig.width=80,  
+                      fig.height=60,
+                      out.width = 100,
+                      code_folding = TRUE)
+options(scipen = 999)
+```
+
+```{r Packages, echo=FALSE, include=FALSE}
+library(readxl)
+library(rmarkdown)
+library(tidyverse)
+library(distill)
+library(magrittr)
+library(yaml)
+library(ggthemes)
+library(kableExtra)
+library(formatR)
+library(htmlwidgets)
+library(htmltools)
+library(reactable)
+library(knitr)
+library(RColorBrewer)
+library(viridis)
+library(writexl)
+library(nbastatR)
+library(plotly)
+```
+
+```{r}
+Sys.setenv("VROOM_CONNECTION_SIZE" = 131072 * 3)
+
+NBA2022 <- bref_players_stats(seasons = 2023, tables = c("advanced", "totals"),
+                   include_all_nba = F, only_totals = TRUE, nest_data = FALSE,
+                   assign_to_environment = TRUE, widen_data = TRUE, join_data = TRUE,
+                   return_message = TRUE) 
+
+
+
+Advanced <- dataBREFPlayerAdvanced 
+Advanced <- Advanced %>%
+  select(slugPlayerSeason, namePlayer:countGames, idPlayerNBA, minutes:ratioVORP) %>%
+  rename(Position = 'slugPosition', Player = namePlayer, Age = agePlayer, Games = countGames,
+         Minutes = minutes, Team = slugTeamBREF, 'Win Share Ratio Per 48' = ratioWSPer48, 'VORP Ratio' = ratioVORP) %>%
+  mutate(Position = ifelse(Position %in% c("C", "PF", "SF", "PF-SF", "PF-C", "SF-SG"), "Frontcourt", "Backcourt"))
+
+Advanced <- Advanced %>%
+  filter(Minutes >= 500) 
+
+Test <- Advanced %>%
+  ggplot(aes(`Win Share Ratio Per 48`, `VORP Ratio`, text = paste("Player: ", Player), color = Minutes)) +
+  geom_point(size  = 1) +
+  scale_x_continuous(breaks = c(seq(-.05,.35,.05)), limits = c(-.05,.35)) +
+  scale_y_continuous(limits = c(-1,9), breaks = c(seq(-1,9,1))) +
+  scale_color_viridis(option = "plasma", labels = scales::comma) +
+  #scale_color_manual(values = pal, name = "Minutes") +
+  labs(title = "VORP Ratio vs Win Share Ratio", subtitle = "Players with <500 minutes logged (as of 12.31.22) are omitted") +
+  theme_fivethirtyeight(base_size = 40, base_family = 'serif') +
+  theme(axis.title = element_text(family = 'serif', size = 40), axis.text = element_text(size = 20),
+        legend.text = element_text(size = 30), legend.title = element_text(size = 40), legend.position = "right", legend.direction = "vertical",
+        legend.key.height = unit(1.5, "cm"), legend.key.width =  unit(2, "cm")) +
+  facet_grid(~Position) 
+
+Test2 <- ggplotly(Test, tooltip = c('text', 'x', 'y', 'color')) %>%
+  layout(autoscale = TRUE)
+Test2
+
+Test
+
+
+
+Test3 <- Advanced %>%
+  ggplot(aes(`Win Share Ratio Per 48`, `VORP Ratio`, text = paste("Player: ", Player), color = Minutes)) +
+  geom_point(size  = 1) +
+  scale_x_continuous(breaks = c(seq(-.05,.35,.05)), limits = c(-.05,.35)) +
+  scale_y_continuous(limits = c(-1,9), breaks = c(seq(-1,9,1))) +
+  scale_color_viridis(option = "plasma", labels = scales::comma) +
+  #scale_color_manual(values = pal, name = "Minutes") +
+  labs(title = "VORP Ratio vs Win Share Ratio", subtitle = "Players with <500 minutes logged (as of 12.31.22) are omitted") +
+  theme_fivethirtyeight(base_family = 'serif') +
+  facet_grid(~Position)
+
+Test4 <- ggplotly(Test, tooltip = c('text', 'x', 'y', 'color')) %>%
+  layout()
+Test4
+```
+
+
